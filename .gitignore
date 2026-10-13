@@ -1,0 +1,23 @@
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+
+# Variables de entorno y secretos (API keys de Gemini, DB credentials, SECRET_KEY)
+.env
+.env.local
+
+# Archivos estáticos recolectados o subidas de prueba
+media/
+staticfiles/
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp

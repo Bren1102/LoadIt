@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Espejo y Validación - LoadIt AI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body { 
+            background-color: #f5f3ff; 
+            font-family: 'Segoe UI', sans-serif; 
+        }
+        .info-card { 
+            border-radius: 15px; 
+            border: none; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
+        }
+        .form-label { 
+            font-size: 0.75rem; 
+            color: #4c1d95; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+        .form-control { 
+            border-radius: 8px; 
+            padding: 10px; 
+            margin-bottom: 1rem; 
+            border: 1px solid #ced4da; 
+        }
+        .form-control:focus { 
+            box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.15); 
+            border-color: #6d28d9;
+        }
+        /* Botones e Identidad en Violeta */
+        .btn-primary {
+            background-color: #4c1d95 !important;
+            border-color: #4c1d95 !important;
+        }
+        .btn-primary:hover {
+            background-color: #6d28d9 !important;
+            border-color: #6d28d9 !important;
+        }
+        .btn-outline-primary {
+            color: #4c1d95 !important;
+            border-color: #4c1d95 !important;
+        }
+        .btn-outline-primary:hover {
+            background-color: #4c1d95 !important;
+            color: #ffffff !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar con la nueva identidad de marca de Buque y Fucsia -->
+    <nav class="navbar navbar-dark py-3 shadow-sm" style="background-color: #4c1d95;">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'dashboard' %}">
+                <span class="material-icons" style="color: #d946ef;">directions_boat</span>
+                <span>LOADIT <span style="color: #d946ef; font-weight: 800;">AI</span></span>
+            </a>
+            <span class="navbar-text text-white fw-bold">
+                MÓDULO DE AUDITORÍA <span style="color: #d946ef;">LOADIT AI</span>
+            </span>
+        </div>
+    </nav>
+
+    <div class="container mt-5 pb-5">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="row">
+                <!-- COLUMNA IZQUIERDA: FORMULARIO ESPEJO ADUANERO -->
+                <div class="col-lg-7">
+                    <div class="card info-card p-4 mb-4 bg-white">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+                                <span class="material-icons" style="color: #4c1d95;">assignment</span>
+                                Formulario Espejo Consolidado
+                            </h4>
+                            
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-success d-inline-flex align-items-center gap-2 px-3 shadow-sm" style="border-radius: 8px;">
+                                    <span class="material-icons">save</span> Guardar
+                                </button>
+                                
+                                <!-- DROPDOWN CONFIGURADO: Selección dinámica de formato -->
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-primary dropdown-toggle d-inline-flex align-items-center gap-2 px-3 shadow-sm" type="button" id="dropdownExport" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 8px;">
+                                        <span class="material-icons">file_download</span> Exportar
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="dropdownExport" style="border-radius: 12px;">
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{% url 'exportar_documento' formulario.id 'word' %}">
+                                                <span class="material-icons text-primary" style="font-size: 20px;">description</span> Descargar Word (.docx)
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{% url 'exportar_documento' formulario.id 'pdf' %}">
+                                                <span class="material-icons text-danger" style="font-size: 20px;">picture_as_pdf</span> Descargar PDF (.pdf)
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Nro. Certificado Referencia</label>
+                                <input type="text" name="nro_certificado" class="form-control" value="{{ formulario.nro_certificado_referencia|default:'' }}">
+                                
+                                <label class="form-label">País de Destino</label>
+                                <input type="text" name="pais_destino" class="form-control bg-light" value="{{ formulario.pais_destino }}" readonly>
+
+                                <label class="form-label">Exportador Nombre</label>
+                                <input type="text" name="exportador_nombre" class="form-control" value="{{ formulario.exportador_nombre|default:'' }}">
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Importador Nombre</label>
+                                <input type="text" name="importador_nombre" class="form-control" value="{{ formulario.importador_nombre|default:'' }}">
+
+                                <label class="form-label">Fecha de Carga (No editable)</label>
+                                <input type="text" class="form-control bg-light" value="{{ formulario.fecha_carga|date:'d/m/Y H:i' }} hs" readonly>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <label class="form-label">Detalle de la Mercadería Macheada</label>
+                                <textarea name="detalle_mercaderia" class="form-control" rows="3">{{ formulario.detalle_mercaderia|default:'' }}</textarea>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4 text-muted">
+                        
+                        <!-- SECCIÓN DINÁMICA DE ARCHIVOS ASOCIADOS -->
+                        <div class="form-label mb-2">Documentación Original Vinculada</div>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for doc in formulario.documentos.all %}
+                                <a href="{{ doc.archivo.url }}" target="_blank" class="btn btn-outline-dark d-inline-flex align-items-center gap-1 btn-sm">
+                                    <span class="material-icons" style="font-size: 16px;">
+                                        {% if doc.tipo == 'FACTURA' %}receipt{% elif doc.tipo == 'INSTRUCCIONES' %}explore{% else %}label{% endif %}
+                                    </span> 
+                                    {{ doc.get_tipo_display }}
+                                </a>
+                            {% empty %}
+                                <span class="text-muted small">No hay archivos físicos guardados en esta operación.</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COLUMNA DERECHA: CUADERNO DE OBSERVACIONES DEL CONTROL ADUANERO -->
+                <div class="col-lg-5">
+                    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
+                        <span class="material-icons" style="color: #d946ef;">rate_review</span> Notas de Control Técnico
+                    </h5>
+                    <div class="card info-card p-4 bg-white mb-3">
+                        <div class="mb-2 text-secondary small fw-semibold">ANOTACIONES DE TU HERMANO:</div>
+                        <textarea name="observaciones_hermano" class="form-control border-secondary-subtle" style="height: 280px; font-size: 0.95rem; resize: none;" placeholder="Escribí acá discrepancias de peso, lotes, o validaciones pendientes...">{{ formulario.observaciones_hermano|default:'' }}</textarea>
+                    </div>
+                    <small class="text-muted d-block px-1">
+                        <span class="fw-bold text-dark">Nota de sistema:</span> La información de la izquierda proviene de la consolidación inteligente de la documentación aduanera cargada. El botón superior consolidará los cambios.
+                    </small>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+
+    <!-- Habilitamos JS de Bootstrap necesario para el comportamiento interactivo del dropdown -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
